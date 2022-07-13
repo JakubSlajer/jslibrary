@@ -1,0 +1,58 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.1'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'org.openapi.generator' version '6.0.0'
+	id 'java'
+}
+
+apply plugin: 'org.openapi.generator'
+
+group = 'com.etnetera'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven { url 'https://repo1.maven.org/maven2' }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.openapitools:openapi-generator-gradle-plugin:6.0.0'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+	implementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+	implementation 'org.mockito:mockito-core:4.6.1'
+	implementation 'org.mockito:mockito-all:1.10.19'
+	implementation 'org.mockito:mockito-junit-jupiter:4.6.1'
+    implementation 'com.vdurmont:semver4j:3.1.0'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.0'
+}
+
+configurations.all {
+	exclude module: 'slf4j-simple'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+
+openApiGenerate {
+	generatorName = "spring"
+	inputSpec = "$rootDir/docs/openapi/api.yaml".toString()
+	outputDir = "$buildDir/generated/".toString()
+	apiPackage = "com.etnetera.jslibrary.generated_sources.api"
+	modelPackage = "com.etnetera.jslibrary.generated_sources.model"
+	generateApiTests = false
+	configOptions = [
+			dateLibrary: 'java8'
+	]
+}
+
+
