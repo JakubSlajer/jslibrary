@@ -15,4 +15,4 @@ jobs:
         with:
           mongodb-version: 5.0
       - name: Build with Gradle
-        run: ./gradlew build --scan
+        run: gradle build
