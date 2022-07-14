@@ -4,7 +4,6 @@ import com.etnetera.jslibrary.domain.Framework;
 import com.etnetera.jslibrary.repository.FrameworkRepository;
 import com.etnetera.jslibrary.service.FrameworkService;
 import com.etnetera.jslibrary.utils.VersionNumberGenerator;
-import com.github.dozermapper.core.Mapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -106,7 +105,7 @@ public class FrameworkServiceTest {
     @Test
     public void testAddVersion(){
         ArgumentCaptor<Framework> instanceCaptor = ArgumentCaptor.forClass(Framework.class);
-        frameworkService.addVersion("React", "1.0.0");
+        frameworkService.addVersion("React", List.of("1.0.0"));
         verify(frameworkRepository).findByName("React");
         verify(frameworkRepository).save(instanceCaptor.capture());
         verifyNoMoreInteractions(frameworkRepository);

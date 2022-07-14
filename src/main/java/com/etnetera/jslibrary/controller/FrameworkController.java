@@ -68,21 +68,45 @@ public class FrameworkController {
      */
     @PutMapping(value = "/frameworks/{frameworkName}",
             produces = { "application/json", "application/problem+json" },
-            consumes = { "text/plain" })
-    public ResponseEntity<Framework> updateName(
-            @PathVariable("frameworkName") String frameworkName,
-            @RequestBody String newName){
+            consumes = { "application/json" })
+    public ResponseEntity<Framework> updateName(@PathVariable("frameworkName") String frameworkName,
+                                                @RequestBody FrameworkVO frameworkVO){
         try {
-            return new ResponseEntity<>(frameworkService.updateName(frameworkName, newName), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(frameworkService.updateName(
+                    frameworkName, frameworkVO.getName()), HttpStatus.ACCEPTED);
         } catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     /**
-     * POST /frameworks/{frameworkName}
+     * PUT /frameworks/version/{frameworkName}
+     * Add version to framework version list
+     *
+     * @param frameworkName framework to update
+     * @param frameworkVO request body
+     * @return  When operation is successful (status code 202)
+     *          or When request is invalid (status code 400)
+     */
+    @PutMapping(value = "/frameworks/version/{frameworkName}",
+            produces = { "application/json", "application/problem+json" },
+            consumes = { "application/json" })
+    public ResponseEntity<String> addVersions(@PathVariable("frameworkName") String frameworkName,
+                                             @RequestBody FrameworkVO frameworkVO) {
+        try {
+            frameworkService.addVersion(frameworkName, frameworkVO.getVersions());
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    /**
+     * POST /frameworks
      * Update framework name
      *
+     * @param frameworkVO request body
      * @return  When operation is successful (status code 202 + updated framework)
      *          or When request is invalid (status code 400)
      */

@@ -8,7 +8,16 @@ public class FrameworkVO implements Serializable {
     public String name;
     public List<String> versions;
 
+    public FrameworkVO() {
+    }
+
     public FrameworkVO(String name, List<String> versions) {
+        this.name = name;
+        this.versions = versions;
+    }
+
+    public FrameworkVO(String id, String name, List<String> versions) {
+        this.id = id;
         this.name = name;
         this.versions = versions;
     }

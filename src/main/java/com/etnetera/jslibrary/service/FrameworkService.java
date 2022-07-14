@@ -1,11 +1,13 @@
 package com.etnetera.jslibrary.service;
 
 import com.etnetera.jslibrary.domain.Framework;
+import com.etnetera.jslibrary.managers.FrameworkVersionManager;
 import com.etnetera.jslibrary.repository.FrameworkRepository;
-import com.github.dozermapper.core.Mapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +17,11 @@ import java.util.Optional;
 public class FrameworkService {
 
     private final FrameworkRepository frameworkRepository;
-    public FrameworkService(FrameworkRepository frameworkRepository, Mapper mapper) {
+    private final FrameworkVersionManager frameworkVersionManager;
+    public FrameworkService(FrameworkRepository frameworkRepository,
+                            FrameworkVersionManager frameworkVersionManager) {
         this.frameworkRepository = frameworkRepository;
+        this.frameworkVersionManager = frameworkVersionManager;
     }
 
     public List<Framework> findAll(){
@@ -32,6 +37,7 @@ public class FrameworkService {
         if (opt.isPresent()){
             var fw = opt.get();
             fw.setName(newName);
+            fw.setUpdated(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
             frameworkRepository.save(fw);
             return fw;
         } else {
@@ -39,12 +45,12 @@ public class FrameworkService {
         }
     }
 
-    public void addVersion(String fwName, String version){
+    public void addVersion(String fwName, List<String> versionList){
         Framework fw = frameworkRepository.findByName(fwName).orElseThrow();
-        List<String> versions = fw.getVersions();
-        var new_versions_list = new ArrayList<String>(versions);
-        new_versions_list.add(version);
-        fw.setVersions(new_versions_list);
+        var newVersionsList = new ArrayList<>(fw.getVersions());
+        newVersionsList.addAll(versionList);
+        fw.setVersions(frameworkVersionManager.sortListOfVersions(newVersionsList));
+        fw.setUpdated(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
         frameworkRepository.save(fw);
     }
 
