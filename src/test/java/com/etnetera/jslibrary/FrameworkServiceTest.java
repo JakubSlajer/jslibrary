@@ -3,7 +3,8 @@ package com.etnetera.jslibrary;
 import com.etnetera.jslibrary.domain.Framework;
 import com.etnetera.jslibrary.repository.FrameworkRepository;
 import com.etnetera.jslibrary.service.FrameworkService;
-import com.vdurmont.semver4j.Semver;
+import com.etnetera.jslibrary.utils.VersionNumberGenerator;
+import com.github.dozermapper.core.Mapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,6 +33,8 @@ public class FrameworkServiceTest {
 
     @Autowired
     FrameworkService frameworkService;
+    @Autowired
+    VersionNumberGenerator versionNumberGenerator;
 
 
     @BeforeEach
@@ -43,7 +45,8 @@ public class FrameworkServiceTest {
         for (var name: fwNames){
             Framework framework = new Framework();
             framework.setName(name);
-            framework.setVersions(generateRandomVersionList());
+            var count = versionNumberGenerator.randInt(1,4);
+            framework.setVersions(versionNumberGenerator.generateRandomVersionList(count));
             fwList.add(framework);
         }
 
@@ -108,32 +111,5 @@ public class FrameworkServiceTest {
         verify(frameworkRepository).save(instanceCaptor.capture());
         verifyNoMoreInteractions(frameworkRepository);
         assertTrue(instanceCaptor.getValue().getVersions().contains("1.0.0"));
-    }
-
-    private Integer randNumToBounds(int bounds){
-        Random random = new Random();
-        return random.nextInt(0, bounds);
-    }
-
-    private List<String> generateRandomVersionList(){
-
-        List<Semver> semverList = new ArrayList<>();
-        Random random = new Random();
-
-        var count = random.nextInt(1,4);
-
-        for (int i = 0; i <= count; i++) {
-            Semver version = new Semver(String.format("%s.%s.%s",
-                    randNumToBounds(10), randNumToBounds(10), randNumToBounds(10)));
-
-            if (semverList.isEmpty() || semverList.get(semverList.size() -1 ).isGreaterThanOrEqualTo(version)){
-                semverList.add(version);
-            } else {
-                semverList.add(0, version);
-            }
-        }
-
-        // map semver list to list of strings
-        return semverList.stream().map(Semver::getValue).toList();
     }
 }

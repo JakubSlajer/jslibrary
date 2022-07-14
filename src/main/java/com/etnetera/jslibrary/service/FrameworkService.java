@@ -2,6 +2,7 @@ package com.etnetera.jslibrary.service;
 
 import com.etnetera.jslibrary.domain.Framework;
 import com.etnetera.jslibrary.repository.FrameworkRepository;
+import com.github.dozermapper.core.Mapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,25 +15,25 @@ import java.util.Optional;
 public class FrameworkService {
 
     private final FrameworkRepository frameworkRepository;
-
-    public FrameworkService(FrameworkRepository frameworkRepository) {
+    public FrameworkService(FrameworkRepository frameworkRepository, Mapper mapper) {
         this.frameworkRepository = frameworkRepository;
     }
 
-    public void findAll(){
-        frameworkRepository.findAll();
+    public List<Framework> findAll(){
+        return frameworkRepository.findAll();
     }
 
-    public void findByName(String name){
-        frameworkRepository.findByName(name);
+    public Optional<Framework> findByName(String name){
+        return frameworkRepository.findByName(name);
     }
 
-    public void updateName(String oldName, String newName) throws Exception {
+    public Framework updateName(String oldName, String newName) throws Exception {
         Optional<Framework> opt = frameworkRepository.findByName(oldName);
         if (opt.isPresent()){
             var fw = opt.get();
             fw.setName(newName);
             frameworkRepository.save(fw);
+            return fw;
         } else {
             throw new Exception(String.format("can't find object with given name %s", oldName));
         }
@@ -45,6 +46,10 @@ public class FrameworkService {
         new_versions_list.add(version);
         fw.setVersions(new_versions_list);
         frameworkRepository.save(fw);
+    }
+
+    public void create(Framework framework){
+        frameworkRepository.save(framework);
     }
 
     public void delete(String name) throws Exception {
