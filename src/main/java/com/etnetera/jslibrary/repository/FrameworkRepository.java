@@ -7,7 +7,4 @@ import java.util.Optional;
 
 public interface FrameworkRepository extends MongoRepository<Framework, String> {
 
-    Optional<Framework> findByName(String name);
-    void deleteByName(String name);
-
 }

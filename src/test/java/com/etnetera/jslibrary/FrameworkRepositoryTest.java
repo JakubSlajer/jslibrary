@@ -36,18 +36,18 @@ class FrameworkRepositoryTest extends AbstractTest {
 	void canUpdateFWItem(){
 		List<String> versions = List.of("1.0.0");
 
-		Framework fw = frameworkRepository.findByName("React").orElseThrow();
+		Framework fw = frameworkRepository.findById("React").orElseThrow();
 		fw.setVersions(versions);
 		frameworkRepository.save(fw);
 
-		Framework updatedInstance = frameworkRepository.findByName("React").orElseThrow();
+		Framework updatedInstance = frameworkRepository.findById("React").orElseThrow();
 		assertEquals(updatedInstance.getVersions(), versions, "updated value does not match");
 		assertEquals(1, frameworkRepository.findAll().size(), "collection size does not match");
 	}
 
 	@Test
 	void canDeleteFWItem(){
-		frameworkRepository.deleteByName("React");
+		frameworkRepository.deleteById("React");
 		assertEquals(0, frameworkRepository.findAll().size());
 	}
 

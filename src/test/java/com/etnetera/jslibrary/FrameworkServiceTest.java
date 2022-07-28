@@ -50,7 +50,7 @@ public class FrameworkServiceTest {
         }
 
         Mockito.when(frameworkRepository.findAll()).thenReturn(fwList);
-        Mockito.when(frameworkRepository.findByName(any())).thenReturn(fwList.stream().findAny());
+        Mockito.when(frameworkRepository.findById(any())).thenReturn(fwList.stream().findAny());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class FrameworkServiceTest {
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         var name = "name";
         frameworkService.findByName(name);
-        verify(frameworkRepository).findByName(argumentCaptor.capture());
+        verify(frameworkRepository).findById(argumentCaptor.capture());
         verifyNoMoreInteractions(frameworkRepository);
         assertEquals(name, argumentCaptor.getValue());
     }
@@ -80,7 +80,7 @@ public class FrameworkServiceTest {
             System.out.println(e.getMessage());
         }
 
-        verify(frameworkRepository).findByName(argumentCaptor.capture());
+        verify(frameworkRepository).findById(argumentCaptor.capture());
         verify(frameworkRepository).save(instanceCaptor.capture());
         assertEquals("React", argumentCaptor.getValue());
         assertEquals(instanceCaptor.getValue().getName(), "ReactJS");
@@ -96,8 +96,8 @@ public class FrameworkServiceTest {
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
-        verify(frameworkRepository).findByName(any());
-        verify(frameworkRepository).deleteByName(argumentCaptor.capture());
+        verify(frameworkRepository).findById(any());
+        verify(frameworkRepository).deleteById(argumentCaptor.capture());
         verifyNoMoreInteractions(frameworkRepository);
         assertEquals("React", argumentCaptor.getValue());
     }
@@ -106,7 +106,7 @@ public class FrameworkServiceTest {
     public void testAddVersion(){
         ArgumentCaptor<Framework> instanceCaptor = ArgumentCaptor.forClass(Framework.class);
         frameworkService.addVersion("React", List.of("1.0.0"));
-        verify(frameworkRepository).findByName("React");
+        verify(frameworkRepository).findById("React");
         verify(frameworkRepository).save(instanceCaptor.capture());
         verifyNoMoreInteractions(frameworkRepository);
         assertTrue(instanceCaptor.getValue().getVersions().contains("1.0.0"));

@@ -91,7 +91,7 @@ public class FrameworkControllerTest extends AbstractTest {
                 baseUrl + "/frameworks/" + fwReactJs.getName(), HttpMethod.PUT, entity, String.class);
 
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-        Framework framework = frameworkRepository.findByName("some name").orElseThrow();
+        Framework framework = frameworkRepository.findById("some name").orElseThrow();
         assertNotNull(framework);
         assertNotNull(framework.getUpdated());
 
@@ -114,7 +114,7 @@ public class FrameworkControllerTest extends AbstractTest {
                 baseUrl + "/frameworks/version/" + fwReactJs.getName(), HttpMethod.PUT, entity, String.class);
 
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-        Framework framework = frameworkRepository.findByName(fwReactJs.getName()).orElseThrow();
+        Framework framework = frameworkRepository.findById(fwReactJs.getName()).orElseThrow();
         assertEquals(List.of("0.0.1-alpha", "0.0.1", "0.0.2", "0.0.3-alpha", "0.0.3"), framework.getVersions());
         assertNotNull(framework.getUpdated());
 
@@ -137,7 +137,7 @@ public class FrameworkControllerTest extends AbstractTest {
                 baseUrl + "/frameworks", HttpMethod.POST, entity, String.class);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertNotNull(frameworkRepository.findByName("EmberJs"));
+        assertNotNull(frameworkRepository.findById("EmberJs"));
     }
 
     @Test

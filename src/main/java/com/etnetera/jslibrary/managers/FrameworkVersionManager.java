@@ -1,60 +1,31 @@
 package com.etnetera.jslibrary.managers;
 
-import com.etnetera.jslibrary.utils.MapUtils;
 import com.vdurmont.semver4j.Semver;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class FrameworkVersionManager {
 
-    private Integer index;
-    private final MapUtils mapUtils;
-
-    public FrameworkVersionManager(MapUtils mapUtils) {
-        this.mapUtils = mapUtils;
-    }
-
-    public List<String> sortListOfVersions(List<String> unsortedList){
-
-        Map<String, Integer> versionToIndexMap = new HashMap<>();
-
-        List<Semver> listSemver = new ArrayList<>();
-        // convert list of strings to a list of semvers
-        unsortedList.forEach( version -> { listSemver.add(new Semver(version)); });
-
-        // iterate through list of versions in listSemver
-        for (Semver semver: listSemver) {
-            // reset abstract index value
-            index = -1;
-            // compare each semver with all other semvers in a list
-            listSemver.forEach( version -> {
-                if (semver.isGreaterThanOrEqualTo(version)){
-                    // if it's greater than the compared one add 1 to abstract index
-                    index++;
-                }
-            });
-
-            // assign index to a semver and add it to a map
-            versionToIndexMap.put(semver.toString(), index);
+    public List<String> sortListOfVersions(List<String> unsortedList) {
+        // nothing to do, just return empty list
+        if (CollectionUtils.isEmpty(unsortedList)) {
+            return Collections.emptyList();
         }
 
-        //sort map by comparator
-        var versionToIndexMapSorted = mapUtils.sortByComparator(versionToIndexMap, true);
+        final var semvers = unsortedList.stream()
+                .map(Semver::new) // creating Semver instances
+                .sorted() // Semver class already implements Comparable IF, so it's not necessary to write some specific comparator
+                .map(Semver::getValue) // mapping Semver back to version
+                .toList(); // creating a new list of sorted versions
 
-        //for each version in dictionary add to result list with index of its key value
-        //create list of versions /strings/ ordered from lower to higher
-        List<String> resultList = new ArrayList<>(versionToIndexMapSorted.keySet());
-
-        return resultList;
-
+        return semvers;
     }
 
-    public List<String> mapSemverToList(List<Semver> semverList){
+    public List<String> mapSemverToList(List<Semver> semverList) {
         return semverList.stream().map(Semver::getValue).toList();
     }
 
