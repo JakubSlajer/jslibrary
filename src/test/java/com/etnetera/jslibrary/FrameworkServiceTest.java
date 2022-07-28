@@ -64,7 +64,7 @@ public class FrameworkServiceTest {
     public void testFindByName(){
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         var name = "name";
-        frameworkService.findByName(name);
+        frameworkService.findById(name);
         verify(frameworkRepository).findById(argumentCaptor.capture());
         verifyNoMoreInteractions(frameworkRepository);
         assertEquals(name, argumentCaptor.getValue());

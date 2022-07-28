@@ -49,7 +49,7 @@ public class FrameworkController {
      */
     @GetMapping(value = "/frameworks/{frameworkName}")
     public ResponseEntity<Framework> retrieveByName(@PathVariable("frameworkName") String frameworkName){
-        Optional<Framework> optional = frameworkService.findByName(frameworkName);
+        Optional<Framework> optional = frameworkService.findById(frameworkName);
         if (optional.isPresent()){
             return new ResponseEntity<>(optional.get(), HttpStatus.OK);
         } else {

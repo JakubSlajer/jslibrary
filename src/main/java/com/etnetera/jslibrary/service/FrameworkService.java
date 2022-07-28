@@ -29,8 +29,8 @@ public class FrameworkService {
         return frameworkRepository.findAll();
     }
 
-    public Optional<Framework> findByName(String name) {
-        return frameworkRepository.findById(name);
+    public Optional<Framework> findById(String id) {
+        return frameworkRepository.findById(id);
     }
 
     public Framework updateName(String oldName, String newName) throws Exception {
