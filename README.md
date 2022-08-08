@@ -1,5 +1,4 @@
 # JSLibrary
-> Test project for Etnetera
  
 [![CI](https://github.com/JakubSlajer/jslibrary_test_project/actions/workflows/gradle.yml/badge.svg)](https://github.com/JakubSlajer/jslibrary_test_project/actions/workflows/gradle.yml)
 
